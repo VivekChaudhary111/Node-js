@@ -1,0 +1,32 @@
+*{
+    margin: 0; /* Resetting margin to 0 for all elements */
+    padding: 0; /* Resetting padding to 0 for all elements */
+    box-sizing: border-box; /* Setting box-sizing to border-box for all elements */
+}
+
+h1{
+    color: red; /* Setting the text color to red */
+    font-size: 50px; /* Setting the font size to 50 pixels */
+    text-align: center; /* Centering the text */
+    margin-top: 100px; /* Adding a top margin of 100 pixels */
+    background-color: yellow; /* Setting the background color to yellow */
+    padding: 20px; /* Adding padding of 20 pixels around the text */
+}
+p{
+    color: blue; /* Setting the text color to blue */
+    font-size: 20px; /* Setting the font size to 20 pixels */
+    text-align: center; /* Centering the text */
+    margin-top: 50px; /* Adding a top margin of 50 pixels */
+    background-color: lightgray; /* Setting the background color to light gray */
+    padding: 10px; /* Adding padding of 10 pixels around the text */
+}
+ul{
+    list-style-type: square; /* Setting the list style to square */
+    padding: 20px; /* Adding padding of 20 pixels around the list */
+    background-color: lightblue; /* Setting the background color to light blue */
+}
+li{
+    color: green; /* Setting the text color of list items to green */
+    font-size: 18px; /* Setting the font size of list items to 18 pixels */
+    margin: 10px 0; /* Adding a vertical margin of 10 pixels to each list item */
+}   
