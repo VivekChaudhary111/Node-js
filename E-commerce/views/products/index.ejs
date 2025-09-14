@@ -1,0 +1,22 @@
+<% layout('layouts/boiler-plate') %>
+<%- include('../partials/navbar') %>
+<div class="row">
+        <%for(let item of products){%>
+            <div class="col-lg-4 mt-3">
+                <div class="card shadow mx-auto" style="width: 22rem;;">
+                    <img src="<%=item.img%>" style="width: auto; height: auto; margin: 5%;" class="card-img-top" alt="image error">
+                        <div class="card-body">
+                            <h2 class="card-title"><%=item.name%></h2>
+                            <h3 class="card-title">₹<%=item.price%></h3>
+                            <p class="card-text"><%=item.desc%></p>
+                            <a href="/product/<%=item._id%>" class="btn btn-info">View Product</a>
+                            <form action="/product/<%=item._id%>?_method=DELETE" method="POST" class="d-inline-block">
+                                <button class="btn btn-danger">DELETE</button>
+                            </form>
+                        </div>
+                </div>
+            </div>
+        <%}%>
+</div>
+</body>
+</html>
