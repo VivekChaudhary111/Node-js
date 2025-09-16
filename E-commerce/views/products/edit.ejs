@@ -8,6 +8,7 @@
 </head>
 <body>
     <%- include('../partials/navbar') %>
+    <%- include('../partials/flash') %>
     <div class="container mt-5">
         <h2 class="text-center mb-4">Editing a Product</h2>
         <form action="/product/<%=foundProduct._id%>?_method=PATCH" method="POST" class="shadow p-4 rounded bg-light needs-validation" novalidate>

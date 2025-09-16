@@ -8,7 +8,7 @@ const {validateProduct} = require('../middleware');
 router.get('/products', async (req, res)=>{
     try{
         let products = await Product.find({});
-        res.render('products/index', {products});
+        res.render('products/index', {products, success:req.flash('success')});
     }catch(e){
         res.status(500).render('error', {status: 500, message: "Internal_Server_Problem", err: e.message})
     }
@@ -28,6 +28,7 @@ router.post('/products', validateProduct, async (req, res)=>{
     try{
         let {name, img, price, desc} = req.body;
         await Product.create({name, img, price, desc});
+        req.flash('success', 'Product added successfully!');
         res.redirect('/products');
     }catch(e){
         res.status(500).render('error', {status: 500, message: "Internal_Server_Problem", err: e.message})
@@ -47,7 +48,7 @@ router.get('/product/:id', async (req, res)=>{
         }
         averageRating = Math.round(averageRating);
         // console.log(averageRating);
-        res.render('products/show', {foundProduct, averageRating});
+        res.render('products/show', {foundProduct, averageRating, success:req.flash('success')});
     }catch(e){
         res.status(500).render('error', {status: 500, message: "Internal_Server_Problem", err: e.message})
     }
@@ -71,6 +72,7 @@ router.patch('/product/:id', validateProduct, async (req, res)=>{
         let {id} = req.params;
         let {name, price, img, desc} = req.body;
         await Product.findByIdAndUpdate(id, {name, price, img, desc});
+        req.flash('success', 'Product edited successfully!')
         res.redirect(`/product/${id}`);
     }catch(e){
         res.status(500).render('error', {status: 500, message: "Internal_Server_Problem", err: e.message})
@@ -86,6 +88,7 @@ router.delete('/product/:id', async (req, res)=>{
             //     await Review.findByIdAndDelete(id);
             // }
         await Product.findByIdAndDelete(id);
+        req.flash('success', 'Product deleted successfully!')
         res.redirect(`/products`);
     }catch(e){
         res.status(500).render('error', {status: 500, message: "Internal_Server_Problem", err: e.message})

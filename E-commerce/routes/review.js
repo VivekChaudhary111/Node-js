@@ -17,6 +17,7 @@ router.post('/product/:id/review', validateReview, async (req, res)=>{
         product.reviews.push(review);
         await review.save();
         await product.save();
+        req.flash('success', 'Review added successfully!')
         res.redirect(`/product/${id}`);
     }catch(e){
         res.status(500).render('error', {status: 500, message: "Internal_Server_Problem", err: e.message});
@@ -34,6 +35,7 @@ router.delete('/product/:id/review/:idd', async(req, res)=>{
         await product.save(); // save the changes in database
     }
     await Review.findByIdAndDelete(idd);
+    req.flash('success', 'Review deleted successfully!')
     res.redirect(`/product/${id}`);
 })
 

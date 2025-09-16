@@ -1,9 +1,11 @@
 <% layout('layouts/boiler-plate') %>
 <%- include('../partials/navbar') %>
-<div class="row">
-            <div class="col-lg-5" style="margin: 5%;">
-                <div class="card shadow mx-auto " style="width: 70%; ">
-                    <img src="<%=foundProduct.img%>" style="width: 90%; height: auto; margin: 5%;" class="card-img-top mx-auto" alt="image error">
+<%- include('../partials/flash') %>
+
+<div class="row d-flex justify-content-between align-items-center">
+            <div class="col-lg-5 d-flex justify-content-between align-items-center" style="margin: 2%;">
+                <div class="card shadow mx-auto ">
+                    <img src="<%=foundProduct.img%>" class="card-img-top mx-auto" alt="image error">
                     <div class="card-body">
                         <h2 class="card-title "><%=foundProduct.name%></h2>
                         <h4 class="card-title ">₹<%=foundProduct.price%></h4>
@@ -16,7 +18,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3" style="margin: 5%;">
+            <div class="col-lg-3" style="margin: 2%;">
                 <div class="mb-5">
                     <h3>Average Rating:</h3>
                     <div class="card-header">
@@ -50,14 +52,14 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="comment">Comment:</label><br>
-                        <textarea name="comment" id="comment" rows="2" cols="50%"></textarea>
+                        <textarea name="comment" id="comment" rows="2" cols="40%"></textarea>
                     </div>
                     
                     <button type="reset" class="btn btn-sm btn-danger ">Reset</button>
                     <button type="submit" class="btn btn-sm btn-success ">Add Review</button>
                 </form>
             </div>
-            <div class="col-lg-3 " style="margin: 5%;">
+            <div class="col-lg-3 " style="margin: 2%;">
                 <h2>Customer's Reviews</h2>
                 <% for(let review of foundProduct.reviews) { %>
                      <div class="card mb-3" style="width: 100%;">
