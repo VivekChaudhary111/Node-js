@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light nav-fixed" >
+<nav class="navbar navbar-expand-lg navbar-light bg-light nav-fixed">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -7,16 +7,20 @@
       <a class="navbar-brand" href="/products">Shopping App</a>
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         <li class="nav-item active">
-          <a class="nav-link" href="/products">Home</span></a>
+          <a class="nav-link" href="/products">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/product/new">Add Product</a>
         </li>
       </ul>
-      <form class="d-flex align-items-center ms-auto">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+      <div class="ms-auto d-flex" role="search">
+        <% if(!user) { %>
+          <a class="mx-2" href="/login"><button class="btn btn-outline-info" type="button">Login</button></a>
+          <a class="mx-2" href="/register"><button class="btn btn-outline-info" type="button">Signup</button></a>
+        <% } else { %>
+          <a class="mx-2" href="/logout"><button class="btn btn-outline-info" type="button">Logout</button></a>
+        <% } %>
+      </div>
     </div>
   </div>
 </nav>

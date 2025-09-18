@@ -8,7 +8,7 @@ const {validateProduct} = require('../middleware');
 router.get('/products', async (req, res)=>{
     try{
         let products = await Product.find({});
-        res.render('products/index', {products, success:req.flash('success')});
+        res.render('products/index', {products});
     }catch(e){
         res.status(500).render('error', {status: 500, message: "Internal_Server_Problem", err: e.message})
     }
@@ -48,7 +48,7 @@ router.get('/product/:id', async (req, res)=>{
         }
         averageRating = Math.round(averageRating);
         // console.log(averageRating);
-        res.render('products/show', {foundProduct, averageRating, success:req.flash('success')});
+        res.render('products/show', {foundProduct, averageRating});
     }catch(e){
         res.status(500).render('error', {status: 500, message: "Internal_Server_Problem", err: e.message})
     }

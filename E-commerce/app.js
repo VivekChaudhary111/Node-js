@@ -8,6 +8,10 @@ const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const session = require('express-session')
+const authRoutes = require("./routes/auth");
+const passport = require('passport'); //pass
+const LocalStrategy = require('passport-local'); //pass
+const User = require('./models/User'); //pass
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/shopping-app-v1')
@@ -36,9 +40,21 @@ app.set('views', path.join(__dirname, 'views')); // views folder
 app.use(express.static(path.join(__dirname, 'public'))); // public folder
 app.use(session(configSession));
 app.use(flash());
+
+// use static serialize and deserialize of model for passport session support
+app.use(passport.initialize()); //pass
+app.use(passport.session()); //pass
+passport.serializeUser(User.serializeUser()); //pass
+passport.deserializeUser(User.deserializeUser()); //pass
+
+// use static authenticate method of model in LocalStrategy
+passport.use(new LocalStrategy(User.authenticate())); //pass
+
+
 app.use((req, res, next)=>{
-    res.locals.success = req.success;
-    res.locals.error = req.error;
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    res.locals.user = req.user; // Pass the authenticated user to all views
     next();
 })
 
@@ -48,6 +64,7 @@ app.use((req, res, next)=>{
 
 app.use(productRoutes); // used as middleware so that har incoming request par chale
 app.use(reviewRoutes);  // used as middleware so that har incoming request par chale
+app.use(authRoutes); // used as middleware so that har incoming request par chale
 
 app.listen(8080, ()=>{
     console.log("Server connected at PORT http://localhost:8080");
