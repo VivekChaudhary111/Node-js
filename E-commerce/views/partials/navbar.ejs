@@ -1,24 +1,40 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-fixed">
   <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="/">Shopping App</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-      <a class="navbar-brand" href="/products">Shopping App</a>
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item active">
-          <a class="nav-link" href="/products">Home</a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/product/new">Add Product</a>
+          <a class="nav-link" href="/products">Products</a>
         </li>
+        <%if(currentUser && currentUser.role === 'seller') { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/product/new">Add Product</a>
+          </li>
+        <% } %>
       </ul>
-      <div class="ms-auto d-flex" role="search">
-        <% if(!user) { %>
-          <a class="mx-2" href="/login"><button class="btn btn-outline-info" type="button">Login</button></a>
-          <a class="mx-2" href="/register"><button class="btn btn-outline-info" type="button">Signup</button></a>
+      <div class="d-flex flex-column flex-lg-row align-items-center">
+        <% if(!currentUser) { %>
+          <a class="mx-2 mb-2 mb-lg-0" href="/login">
+            <button class="btn btn-outline-info" type="button">Login</button>
+          </a>
+          <a class="mx-2 mb-2 mb-lg-0" href="/register">
+            <button class="btn btn-outline-info" type="button">Signup</button>
+          </a>
         <% } else { %>
-          <a class="mx-2" href="/logout"><button class="btn btn-outline-info" type="button">Logout</button></a>
+          <a href="#" class="nav-link mx-2 mb-2 mb-lg-0">Hi, <%=currentUser.username%></a>
+          <a href="/user/cart" class="nav-link mx-2 mb-2 mb-lg-0">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <sup><span class="badge bg-danger"><%=currentUser.cart.length%></span></sup>
+          </a>
+          <a class="mx-2 mb-2 mb-lg-0" href="/logout">
+            <button class="btn btn-outline-info" type="button">Logout</button>
+          </a>
         <% } %>
       </div>
     </div>

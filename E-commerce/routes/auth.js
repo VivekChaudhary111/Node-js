@@ -3,22 +3,39 @@ const User = require('../models/User');
 const passport = require('passport');
 const router = express.Router();
 
-
+// to show register form
 router.get('/register' , (req,res)=>{
     res.render('auth/signup');
 })
 
+// to actually register the user into DB
 router.post('/register' , async (req,res)=>{
-    let { username , password , email , gender} = req.body;
-    let user = new User({ username , email , gender});
-    let newUser = await User.register(user , password);
-    res.send(newUser);
+    try{
+        let { username , password , email , role} = req.body;
+        let user = new User({ username , email , role});
+        let newUser = await User.register(user , password);
+        // res.send(newUser);
+        req.login(newUser, function(err){
+            if(err) {
+                req.flash('error' , e.message);
+                res.redirect('/products');
+                return next(err);
+            }
+            req.flash('success' , 'Welcome, You are registered successfully');
+            return res.redirect('/products');
+        })
+    }
+    catch(e){
+        req.flash('error' , e.message);
+        res.redirect('/products');
+    }
 })
 
+// to show login form
 router.get('/login' , (req,res)=>{
     res.render('auth/login');
 })
-// actually login
+// actually login the user using passport
 router.post('/login',
   passport.authenticate('local', 
   { 
@@ -26,6 +43,7 @@ router.post('/login',
     failureMessage: true 
   }),
   function(req, res) {
+    console.log(req.user);
     req.flash('success' , 'Welcome Back')
     res.redirect('/products');
 });

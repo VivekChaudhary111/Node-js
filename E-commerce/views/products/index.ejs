@@ -1,23 +1,76 @@
 <% layout('layouts/boiler-plate') %>
 <%- include('../partials/navbar') %>
 <%- include('../partials/flash') %>
+
+<style>
+.row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+    gap: 1rem;
+    padding: 0 15px;
+}
+
+.card {
+    height: 500px; /* Fixed card height */
+}
+
+.image-container {
+    height: 200px; /* Fixed image container height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 5%;
+    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%); /* Default gradient */
+    border-radius: 8px;
+}
+
+.card-img-top {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* Maintains aspect ratio within container */
+}
+
+.card-body {
+    height: calc(100% - 200px - 5%); /* Remaining space for content */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+</style>
+
 <div class="row">
-        <%for(let item of products){%>
-            <div class="col-lg-4 mt-3">
-                <div class="card shadow mx-auto" style="width: 22rem;;">
-                    <img src="<%=item.img%>" style="width: auto; height: auto; margin: 5%;" class="card-img-top" alt="image error">
-                        <div class="card-body">
-                            <h2 class="card-title"><%=item.name%></h2>
-                            <h3 class="card-title">₹<%=item.price%></h3>
-                            <p class="card-text"><%=item.desc%></p>
+    <%for(let item of products){%>
+        <div class="col-lg-4 mt-3">
+            <div class="card shadow mx-auto" style="width: 22rem;">
+                <div class="image-container">
+                    <img src="<%=item.img%>" class="card-img-top" alt="image error" onerror="this.src='/images/placeholder.jpg'">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <h2 class="card-title"><%=item.name%></h2>
+                        <h3 class="card-title">₹<%=item.price%></h3>
+                        <p class="card-text"><%=item.desc%></p>
+                    </div>
+                    <div>
+                        <%if(currentUser && currentUser.role === 'seller') { %>
                             <a href="/product/<%=item._id%>" class="btn btn-info">View Product</a>
                             <form action="/product/<%=item._id%>?_method=DELETE" method="POST" class="d-inline-block">
                                 <button class="btn btn-danger">DELETE</button>
                             </form>
-                        </div>
+                        <% } else {%>
+                            <div class="d-flex justify-content-end ">
+                                <a href="/product/<%=item._id%>" class="btn btn-info">View Product</a>
+                            </div>
+                        <% } %>
+                    </div>
                 </div>
             </div>
-        <%}%>
+        </div>
+    <%}%>
 </div>
+
 </body>
 </html>

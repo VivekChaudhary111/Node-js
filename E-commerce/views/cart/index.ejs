@@ -1,0 +1,311 @@
+<% layout('layouts/boiler-plate') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<style>
+.cart-container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.cart-content {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 30px;
+}
+
+.cart-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.cart-card {
+    height: 200px;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.cart-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.cart-card-body {
+    display: flex;
+    height: 100%;
+}
+
+.cart-image-container {
+    width: 120px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    overflow: hidden;
+}
+
+.cart-img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.cart-content-inner {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cart-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    line-height: 1.3;
+}
+
+.cart-price {
+    font-size: 1rem;
+    color: #28a745;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    background: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: bold;
+}
+
+.quantity-btn:hover {
+    background: #e9ecef;
+}
+
+.quantity-display {
+    min-width: 40px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.cart-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.invoice-section {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+
+.invoice-card {
+    border-radius: 10px;
+}
+
+.invoice-table th {
+    background-color: #f8f9fa;
+    border: none;
+    font-weight: 600;
+    padding: 12px;
+}
+
+.invoice-table td {
+    border: none;
+    padding: 12px;
+}
+
+.total-row {
+    border-top: 2px solid #dee2e6;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .cart-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .invoice-section {
+        position: static;
+    }
+}
+</style>
+
+<div class="cart-container">
+    <h2 class="mb-4">My Cart <span class="badge bg-primary"><%=cartItems.length%></span></h2>
+    
+    <% if(cartItems.length > 0) { %>
+        <div class="cart-content">
+            <!-- Cart Items -->
+            <div class="cart-items">
+                <% for(let item of cartItems) { %>
+                    <div class="cart-card card shadow" data-product-id="<%=item._id%>" data-price="<%=item.price%>">
+                        <div class="cart-card-body">
+                            <div class="cart-image-container">
+                                <img src="<%=item.img%>" class="cart-img" alt="<%=item.name%>" onerror="this.src='/images/placeholder.jpg'">
+                            </div>
+                            <div class="cart-content-inner">
+                                <div>
+                                    <h5 class="cart-title"><%=item.name%></h5>
+                                    <p class="cart-price">₹<%=item.price%></p>
+                                </div>
+                                
+                                <div class="quantity-controls">
+                                    <button type="button" class="quantity-btn decrease-btn">-</button>
+                                    <span class="quantity-display">1</span>
+                                    <button type="button" class="quantity-btn increase-btn">+</button>
+                                </div>
+                                
+                                <div class="cart-buttons">
+                                    <a href="/product/<%=item._id%>" class="btn btn-outline-info btn-sm flex-fill">View</a>
+                                    <form action="/user/<%=item._id%>?_method=DELETE" method="POST" class="d-inline flex-fill">
+                                        <button class="btn btn-outline-danger btn-sm w-100" type="submit">Remove</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+            
+            <!-- Invoice Section -->
+            <div class="invoice-section">
+                <div class="card shadow invoice-card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Order Summary</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table invoice-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoice-items">
+                                <!-- Items will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-success checkout-btn">
+                            <i class="fas fa-credit-card me-2"></i>Proceed to Checkout (<span id="total-amount">₹0</span>)
+                        </button>
+                        <a href="/products" class="btn btn-outline-secondary mt-2 w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x text-muted mb-4"></i>
+            <h4>Your cart is empty</h4>
+            <p class="text-muted">Add some products to get started!</p>
+            <a href="/products" class="btn btn-primary">Continue Shopping</a>
+        </div>
+    <% } %>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cartCards = document.querySelectorAll('.cart-card');
+    const invoiceItems = document.getElementById('invoice-items');
+    const totalAmountSpan = document.getElementById('total-amount');
+    
+    // Initialize quantities and update invoice
+    cartCards.forEach(card => {
+        const increaseBtn = card.querySelector('.increase-btn');
+        const decreaseBtn = card.querySelector('.decrease-btn');
+        const quantityDisplay = card.querySelector('.quantity-display');
+        
+        increaseBtn.addEventListener('click', function() {
+            let currentQty = parseInt(quantityDisplay.textContent);
+            quantityDisplay.textContent = currentQty + 1;
+            updateInvoice();
+        });
+        
+        decreaseBtn.addEventListener('click', function() {
+            let currentQty = parseInt(quantityDisplay.textContent);
+            if (currentQty > 1) {
+                quantityDisplay.textContent = currentQty - 1;
+                updateInvoice();
+            }
+        });
+    });
+    
+    function updateInvoice() {
+        let totalAmount = 0;
+        invoiceItems.innerHTML = '';
+        
+        cartCards.forEach(card => {
+            const productId = card.dataset.productId;
+            const price = parseFloat(card.dataset.price);
+            const quantity = parseInt(card.querySelector('.quantity-display').textContent);
+            const name = card.querySelector('.cart-title').textContent;
+            const itemTotal = price * quantity;
+            totalAmount += itemTotal;
+            
+            // Add row to invoice table
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${name.length > 15 ? name.substring(0, 15) + '...' : name}</td>
+                <td>${quantity}</td>
+                <td class="text-end">₹${itemTotal}</td>
+            `;
+            invoiceItems.appendChild(row);
+        });
+        
+        // Add total row
+        const totalRow = document.createElement('tr');
+        totalRow.className = 'total-row';
+        totalRow.innerHTML = `
+            <td colspan="2"><strong>Total Amount</strong></td>
+            <td class="text-end"><strong>₹${totalAmount}</strong></td>
+        `;
+        invoiceItems.appendChild(totalRow);
+        
+        // Update checkout button
+        totalAmountSpan.textContent = `₹${totalAmount}`;
+    }
+    
+    // Initialize invoice on page load
+    updateInvoice();
+});
+</script>
+
+</body>
+</html>

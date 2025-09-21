@@ -10,11 +10,16 @@ const userSchema = new mongoose.Schema({
         trim:true,
         required:true
     },
-    gender:{
+    role:{
         type:String,
-        trim:true,
         required:true
-    }
+    },
+    cart:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product'
+        }
+    ]
 } )
 
 
