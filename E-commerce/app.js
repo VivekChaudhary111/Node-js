@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const seedDB = require('./seed');
 
+
 const productRoutes = require('./routes/product');
 const reviewRoutes = require('./routes/review');
 const cartRoutes = require('./routes/cart');
@@ -20,7 +21,7 @@ const User = require('./models/User'); //pass
 
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://vivek2020singh2020:pLiJDOMzhCUWADkh@cluster0.sazdu4p.mongodb.net/E-Commerce-App?retryWrites=true&w=majority')
+mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/shopping-app-v1")
 .then(()=>{
     console.log("DB connected successfully...");
 })
@@ -33,7 +34,7 @@ app.use(express.urlencoded({extended: true})); // to parse the req.body
 app.use(express.json()); // to parse json data
 
 let configSession = {
-  secret: 'keyboard cat',
+  secret: process.env.SESSION_SECRET || 'keyboard cat',
   resave: false,
   saveUninitialized: true,
   cookie: { 

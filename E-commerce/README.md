@@ -129,7 +129,7 @@ npm install
 **Step 3: Database Configuration**
 The application is configured to use MongoDB Atlas. The connection string is set in `app.js`:
 ```javascript
-mongoose.connect('mongodb+srv://vivek2020singh2020:pLiJDOMzhCUWADkh@cluster0.sazdu4p.mongodb.net/E-Commerce-App?retryWrites=true&w=majority')
+mongoose.connect('mongodb://127.0.0.1:27017/shopping-app-v1')
 ```
 
 **Step 4: Database Seeding (Optional)**
